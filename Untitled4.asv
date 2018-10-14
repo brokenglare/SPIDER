@@ -1,0 +1,25 @@
+%Pitest
+
+Pip = '10.0.1.3'
+LoP = '10.0.1.4'
+Porto = 5005;
+
+comms = comms();
+
+comms.defineUDPObj('Alpha',LoP,5015,LoP,25001)
+comms.defineUDPObj('RPI',Pip,5005,LoP,25002)
+comms.defineUDPObj('RPIRx',Pip,5005,LoP,5006)
+
+comms.openUDP('Alpha')
+comms.openUDP('RPI')
+comms.openUDP('RPIRx')
+
+c = 1
+while c
+    data = comms.readVector('Alpha',8)
+    comms.writeRaw('RPI', data)
+    if data(6) == uint8(16)
+        c = 0;
+    end
+end
+comms.closeAll();
